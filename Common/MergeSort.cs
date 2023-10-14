@@ -9,20 +9,50 @@ namespace Common
         public int[] Partition(int[] A, int startIndex, int endIndex)
         {
             //TODO #1: return a new array with all elements in A from index startIndex to endIndex (both included): A[startIndex..endIndex]
-
-            int[] partition = null;
+            int partitionLength = endIndex - startIndex + 1;
+            int[] partition = new int[partitionLength];
+            for (int i = 0; i < partitionLength; i++)
+            {
+                partition[i] = A[startIndex + i];
+            }
             return partition;
         }
 
         public void MergePartitions(int[] A, int[] leftPartition, int[] rightPartition)
         {
             //TODO #2: Merge in A the two partitions sorting them
-            
+            int posLeft = 0;
+            int posRight = 0;
+            int i = 0;
+
+            while (posLeft < leftPartition.Length || posRight < rightPartition.Length)
+            {
+                if (posLeft < leftPartition.Length && (posRight >= rightPartition.Length || leftPartition[posLeft] <= rightPartition[posRight]))
+                {
+                    A[i] = leftPartition[posLeft];
+                    posLeft++;
+                }
+                else
+                {
+                    A[i] = rightPartition[posRight];
+                    posRight++;
+                }
+                i++;
+            }
         }
 
         public void Sort(int[] A)
         {
             //TODO #3: Implement MergeSort using the methods above
+            if (A.Length != 1)
+            {
+                int mid = A.Length / 2;
+                int[] leftPartition = Partition(A, 0, mid - 1);
+                int[] rightPartition = Partition(A, mid, A.Length - 1);
+                Sort(leftPartition);
+                Sort(rightPartition);
+                MergePartitions(A, leftPartition, rightPartition);
+            }
         }
 
         public bool CheckIsCorrect()
